@@ -29,7 +29,69 @@ STEP-4: Multiply the two matrices to obtain the cipher text of length three.
 STEP-5: Combine all these groups to get the complete cipher text.
 
 ## PROGRAM 
+~~~
+#include <stdio.h>
+#include <string.h>
+
+int mod26(int x) {
+    return (x % 26 + 26) % 26;
+}
+
+// Function to multiply 3x3 matrix with a 3x1 vector
+void encrypt(int key[3][3], char plain[3], char cipher[3]) {
+    int i, j;
+    for (i = 0; i < 3; i++) {
+        int sum = 0;
+        for (j = 0; j < 3; j++) {
+            sum += key[i][j] * (plain[j] - 'A');
+        }
+        cipher[i] = mod26(sum) + 'A';
+    }
+}
+
+int main() {
+    int key[3][3];
+    char plain[100], cipher[100];
+    int i, j, k = 0, len;
+
+    printf("Enter 9 integers for 3x3 key matrix:\n");
+    for (i = 0; i < 3; i++)
+        for (j = 0; j < 3; j++)
+            scanf("%d", &key[i][j]);
+
+    printf("Enter the plain text (in uppercase): ");
+    scanf("%s", plain);
+
+    len = strlen(plain);
+    
+    // Padding if not multiple of 3
+    while (len % 3 != 0) {
+        plain[len++] = 'X';
+        plain[len] = '\0';
+    }
+
+    for (i = 0; i < len; i += 3) {
+        char block[3], encrypted[3];
+        block[0] = plain[i];
+        block[1] = plain[i + 1];
+        block[2] = plain[i + 2];
+        encrypt(key, block, encrypted);
+        cipher[k++] = encrypted[0];
+        cipher[k++] = encrypted[1];
+        cipher[k++] = encrypted[2];
+    }
+
+    cipher[k] = '\0';
+    printf("Encrypted Text: %s\n", cipher);
+
+    return 0;
+}
+
+~~~
 
 ## OUTPUT
+![image](https://github.com/user-attachments/assets/45bb4620-507e-4a69-9b73-476c8e4191a3)
+
 
 ## RESULT
+Thus, the C program to implement the Hill Cipher was successfully executed and the cipher text was generated.
